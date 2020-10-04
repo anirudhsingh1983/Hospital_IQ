@@ -30,7 +30,7 @@ The actions to clean data would depend upon what are the quality issues in the d
 ## 3. How did you decide on the covariates in your model?
 There was a set of 5 variables to choose from: 'age_in_yrs','hospital_id','last_name','service_id','surgeries_last_month'. 
 
-An important to note is that multivariate normality is the requirement of the a linear regression model. All the abovementioned 5 variables together are not multivariate normal. Also, none of the individual variable is normally distributed. The normality was tested using Shapiro test (scipy.stats.shapiro). So, ideally, linear regression should not be fitted on the model. I didnt check the other requirements (multi-collinearity, homoscedasticity, etc.) of linear regression model as the first condition is breached anyways). 
+An important POINT to note is that multivariate normality is the requirement of the a linear regression model. All the abovementioned 5 variables together are not multivariate normal. Also, none of the individual variable is normally distributed. The normality was tested using Shapiro test (scipy.stats.shapiro). So, ideally, linear regression should not be fitted on the model. I didnt check the other requirements (multi-collinearity, homoscedasticity, etc.) of linear regression model as the first condition is breached anyways). 
 
 But, I proceeded with selecting some of the variables as linear regression is the requirement of the assignment. The decision on each of the variable is described as follows. 
 * age_in_yrs: It is being used in the model. 
@@ -41,15 +41,45 @@ But, I proceeded with selecting some of the variables as linear regression is th
 
 
 ## 4. What is your interpretation of the coefficients of the variables in your model?
-* Coefficient of 'age_in_yrs' = 0.1201. This is very small (closer to 0 than 1). This is also expected, given the low correlation between 'age_in_yrs' and 'surgeries_this_month'.
-* Coefficient of 'service_id' = 0.8944. Though, service_id was encoded using target encoding. Hence, a positive coefficient was expected. This variable doesn't have normal distribution and hence is not quite suited for linear regression. However, I have kept it in the model, else we would run out of variables to use. 
+* Coefficient of 'age_in_yrs' = 0.1201. This is very small (closer to 0 than 1). This is also expected, given the low correlation between 'age_in_yrs' and 'surgeries_this_month'. So, age doesnt have much impact on number of surgeries per month. 
+* Coefficient of 'service_id' = 0.8944. Though, service_id was encoded using target encoding. Hence, a positive coefficient was expected. This variable doesn't have normal distribution and hence is not quite suited for linear regression. However, I have kept it in the model, else we would run out of variables to use. In this case, if the surgeon does the type of surgery that has higher average average of 'surgeries_this_month, the number of expected surgeries will be higher. 
 * Coefficient of 'surgeries_last_month' = 1.2026. This value indicates that the higher the number of surgeries in last month, the higher the number of surgeries expected in 'this' month. This variable doesn't have normal distribution too and hence is not quite suited for linear regression. However, I have kept it in the model, else we would run out of variables to use. 
 
 
 ## 5. How well does this model fit the data overall?
-The model fits fine as you 
+The model fits fine as the adjusted R square is fairly high (0.943).However, the stability of model over time or on a different set of data would be a question as the data violates the assumptions of linear regression. 
 
 
 ## 6. What is the output of RegressionResults.summary? (Nothing other than the raw output of that method is needed.)
+                             OLS Regression Results                             
+|Dep. Variable:     surgeries_this_month   |R-squared:                       0.944|
+|----|-----|
 
+|Model:                              OLS   |Adj. R-squared:                  0.943|
+|----|-----|
+
+| | | | | 
+|----|-----|----|-----|
+|Method:|                   Least Squares   |F-statistic:|                     870.3|
+|Date:                  |Sun, 04 Oct 2020   |Prob (F-statistic):           |3.77e-97|
+|Time:                          |12:22:42   |Log-Likelihood:                |-710.67|
+|No. Observations:                   |160   |AIC:                             |1429.|
+|Df Residuals:                       |156   |BIC:                             |1442.|
+|Df Model:                             |3   |                                 |     |
+|Covariance Type:              |nonrobust   |                                 |     |
+
+| | | | | | | | 
+|----|-----|----|-----|-----|----|-----|
+|                           |coef    |std err          |t      |P>t       |[0.025      |0.975]|
+|Intercept             |-142.3748     |13.763    |-10.344     | 0.000     |-169.562    |-115.188|
+|age_in_yrs             |  0.1201     | 0.155    | 0.772      | 0.441     |-0.187      | 0.427|
+|service_id              | 0.8944     | 0.072    | 12.455     | 0.000     | 0.753      |1.036|
+|surgeries_last_month     |1.2026     | 0.025    | 48.769     | 0.000     | 1.154      | 1.251|
+
+| | | | | 
+|----|-----|----|-----|
+|Omnibus:                       | 3.153   |Durbin-Watson:                |   2.006|
+|Prob(Omnibus):                 | 0.207   |Jarque-Bera (JB):             |   2.936|
+|Skew:                          |-0.260   |Prob(JB):                     |   0.230|
+|Kurtosis:                      | 2.587   |Cond. No.                     |1.81e+03|
  
