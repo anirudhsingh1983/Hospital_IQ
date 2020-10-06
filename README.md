@@ -58,7 +58,7 @@ The model fits fine as the adjusted R square is fairly high (0.943).However, the
 |Model:                              OLS   |Adj. R-squared:                  0.943|
 |----|-----|
 
-| | | | | 
+|Particular |Value |Particular |Value | 
 |----|-----|----|-----|
 |Method:|                   Least Squares   |F-statistic:|                     870.3|
 |Date:                  |Sun, 04 Oct 2020   |Prob (F-statistic):           |3.77e-97|
@@ -68,15 +68,14 @@ The model fits fine as the adjusted R square is fairly high (0.943).However, the
 |Df Model:                             |3   |                                 |     |
 |Covariance Type:              |nonrobust   |                                 |     |
 
-| | | | | | | | 
-|----|-----|----|-----|-----|----|-----|
 |                           |coef    |std err          |t      |P>t       |[0.025      |0.975]|
+|----|-----|----|-----|-----|----|-----|
 |Intercept             |-142.3748     |13.763    |-10.344     | 0.000     |-169.562    |-115.188|
 |age_in_yrs             |  0.1201     | 0.155    | 0.772      | 0.441     |-0.187      | 0.427|
 |service_id              | 0.8944     | 0.072    | 12.455     | 0.000     | 0.753      |1.036|
 |surgeries_last_month     |1.2026     | 0.025    | 48.769     | 0.000     | 1.154      | 1.251|
 
-| | | | | 
+|Particular |Value |Particular |Value | 
 |----|-----|----|-----|
 |Omnibus:                       | 3.153   |Durbin-Watson:                |   2.006|
 |Prob(Omnibus):                 | 0.207   |Jarque-Bera (JB):             |   2.936|
