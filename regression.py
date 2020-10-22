@@ -9,15 +9,17 @@ Created on 04 Oct 2020
 # Imports 
 import pandas as pd
 pd.options.mode.chained_assignment = None
-import functools, requests
+import functools, requests, logging 
 import statsmodels.formula.api as smf
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
+from datetime import datetime 
 
 # Constants 
 CONSTANTS = {"URL":'https://bitbucket.org/!api/2.0/snippets/patientroute/eaXpKj/2d820cd34758161cafb395e8550f1cba2bab4273/files/b_data.json',
              'test_size':0.2,
              'seed':0}
+
 
 def read_from_API(constants):
     """
@@ -39,12 +41,15 @@ def read_from_API(constants):
         data_json = requests.get(constants['URL']).json()
         # Flatten the dictionary values to a list 
         json_values_in_list = functools.reduce(lambda x,y:x+y,data_json.values())
+        logging.info("API read successful.")
         # Convert the flattened dictionary values (in the list) to a dataframe 
         data = pd.DataFrame(json_values_in_list)
+        
 
     except:
         read_success = False
         print("API fetch unsuccessful. Further execution of program terminated.")
+        logging.critical('API read unsuccessful. Program cannot proceed is being terminated.')
         
     return(data,read_success)
     
@@ -127,23 +132,27 @@ def main():
     Args: None
     Returns: None
     """
+    # Set logging 
+    logging.basicConfig(filename= 'logs/regression.py_'+ datetime.now().strftime("%d_%m_%Y_%H_%M_%S") + '.log', level=logging.INFO, format='%(levelname)s:%(message)s')
+    
     # Read data from API into a dataframe 
     data,read_success = read_from_API(constants=CONSTANTS)
     if read_success == True: 
         # Split data into train and test sets 
         data_train, data_test = train_test_split(data,test_size=CONSTANTS['test_size'], random_state=CONSTANTS['seed'],shuffle=True)
-
+        logging.info('Dataset splitted to train and test')
+        
         # Apply target encoding to service_id
         data_train, target_encoding_mappping = target_encoder(data_train,column='service_id',target='surgeries_this_month',encoding_type='mean')
         data_test['service_id'] = data_test['service_id'].map(target_encoding_mappping)
-
+        logging.info('Target encoding applied.')
         # Check if there is any outlier to be removed before fitting the model. In this case, there was nothing found. If outliers would be found, we would remove them. 
         if sum([outlier_detection(data_train,col)[0] for col in data_train.columns[[0,3,4,5]]]) == 0:
             print("No outliers found. Proceeding without any data elimination from train set. \n\n")
 
         # Train a linear regression model from data in dataframe 
         model = regression(data_train,formula='surgeries_this_month ~ age_in_yrs + service_id + surgeries_last_month')
-
+        logging.info('Model training completed.')
         # Print model summary 
         print(model.summary())
 
