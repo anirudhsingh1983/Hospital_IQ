@@ -82,3 +82,4 @@ The model fits fine as the adjusted R square is fairly high (0.943).However, the
 |Skew:                          |-0.260   |Prob(JB):                     |   0.230|
 |Kurtosis:                      | 2.587   |Cond. No.                     |1.81e+03|
  
+##7 test update
